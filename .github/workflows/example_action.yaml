@@ -35,7 +35,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: ./TicketingApp
+          context: "{{defaultContext}}:TicketingApp"
           file: ./Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
