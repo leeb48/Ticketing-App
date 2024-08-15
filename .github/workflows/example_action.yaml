@@ -1,11 +1,42 @@
-name: GitHub Actions
-run-name: ${{ github.actor }} is testing out GitHub Actions
-on: [push]
+name: Publish Docker Image
+run-name: ${{ github.actor }} is publishing docker images
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
 jobs:
-  Build_Docker_Image:
+  push_to_docker_hub:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+
     steps:
-      - name: Checkout ${{ github.repository }}
+      - name: Checkout the repo
         uses: actions/checkout@v4
-      - name: Go to App directory and build image
-        run: cd TicketingApp && docker build . -t ticketing_app:$(date +%s)
+      
+      - name: Log into Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: name/app
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./TicketingApp
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
