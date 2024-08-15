@@ -484,3 +484,6 @@ $RECYCLE.BIN/
 
 # app settings with sensitive data
 appsettings.dev.json
+
+**/bin
+**/out
