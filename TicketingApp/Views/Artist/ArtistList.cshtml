@@ -1,0 +1,8 @@
+@model List<TicketingApp.Models.Artist>;
+
+<ul class="list-group">
+    @foreach (var artist in Model)
+    {
+        <li class="list-group-item">@Html.DisplayFor(model => artist.Name)</li>
+    }
+</ul>

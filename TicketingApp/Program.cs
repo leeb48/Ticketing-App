@@ -10,7 +10,7 @@ builder.WebHost.UseKestrel(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.AddNpgsqlDbContext<TicketCtx>("postgres");
+builder.AddNpgsqlDbContext<TicketingAppCtx>("postgres");
 
 var app = builder.Build();
 

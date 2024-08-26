@@ -1,0 +1,38 @@
+@model List<TicketingApp.Models.Artist>;
+
+@{
+    ViewData["Title"] = "Artist Page";
+}
+
+<h1>Artist Main Page</h1>
+
+<a class="btn btn-primary" href="/artist/create">Create Artist</a>
+
+<hr />
+
+<form hx-post="/artist/search" hx-target="#artist_search_result">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="artistSearchInput" placeholder="Artist Name"
+            aria-label="Artist Name" aria-describedby="Artist Search Inpu">
+        <button class="btn btn-outline-primary" type="submit" id="artist_search_btn">Search</button>
+    </div>
+</form>
+
+<div id="artist_search_result">
+    @foreach (var artist in Model)
+    {
+        <li class="list-group-item">@Html.DisplayFor(model => artist.Name)</li>
+    }
+</div>
+
+<hr />
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    </ul>
+</nav>
