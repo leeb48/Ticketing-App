@@ -49,7 +49,15 @@ Seat:
 ## Application TODO
 - [x] postgres full text search for artist
 - [x] setup search input to execute search and display the results as a list using htmx
-- [ ] display list of artists with pagination
+- [x] display list of artists with pagination
+
+- [ ] edit page for artists
+- [ ] refactor pagination (maybe create a class for this)
+
+- [ ] CRUD Venue and seats
+- [ ] create a seat map for the venue
+- [ ] mark seats on the venue based on their status (available, sold, pending)
+
 - [ ] scaffold the main page with search bar, event list page, and event details page
 
 

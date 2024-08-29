@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 using TicketingApp.Models;
 
 namespace TicketingApp.Data;

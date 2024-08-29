@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
@@ -16,7 +15,9 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
             .Take(10)
             .ToListAsync();
 
-        return View(artists);
+        var artistListPage = new ArtistListPage { Artists = artists };
+
+        return View(artistListPage);
     }
 
     public IActionResult Create()
@@ -24,22 +25,86 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
         return View();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Search(string artistSearchInput)
+    private async Task<ArtistListPage> ListAllArtists(int pageSize)
     {
         var artists = new List<Artist>();
+        var artistListPage = new ArtistListPage { Artists = artists, PageSize = pageSize };
 
-        if (string.IsNullOrEmpty(artistSearchInput))
-        {
-            return PartialView("ArtistList", artists);
-        }
+        var getAllArtistQuery = ctx.Artists;
 
-        artists = await ctx.Artists
-            .Where(a => a.SearchVector!.Matches(EF.Functions.ToTsQuery($"{artistSearchInput}:*")))
-            .Take(10)
+        artistListPage.PageCount = getAllArtistQuery.Count() / pageSize;
+        artistListPage.Artists = await getAllArtistQuery
+            .OrderBy(a => a.Name)
+            .Take(pageSize)
             .ToListAsync();
 
-        return PartialView("ArtistList", artists);
+
+        return artistListPage;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Search(string searchInput, int pageSize = 5)
+    {
+        var artists = new List<Artist>();
+        var artistListPage = new ArtistListPage { Artists = artists, PageSize = pageSize };
+
+
+        if (string.IsNullOrEmpty(searchInput))
+        {
+            var getAllArtistQuery = ctx.Artists;
+
+            artistListPage.PageCount = getAllArtistQuery.Count() / pageSize;
+            artistListPage.Artists = await getAllArtistQuery
+                .OrderBy(a => a.Name)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            return PartialView("ArtistList", artistListPage);
+        }
+
+        var searchQuery = ctx.Artists
+            .OrderBy(a => a.Name)
+            .Where(a => a.SearchVector!.Matches(EF.Functions.ToTsQuery($"{searchInput}:*")));
+
+        artistListPage.PageCount = searchQuery.Count() / pageSize;
+        artistListPage.Artists = await searchQuery.Take(pageSize).ToListAsync();
+        artistListPage.SearchInput = searchInput;
+
+        return PartialView("ArtistList", artistListPage);
+    }
+
+    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize)
+    {
+        var artists = new List<Artist>();
+        var artistListPage = new ArtistListPage { Artists = artists };
+
+        if (string.IsNullOrEmpty(searchInput))
+        {
+            var getAllArtistQuery = ctx.Artists;
+
+            artistListPage.PageCount = pageCount;
+            artistListPage.PageSize = pageSize;
+            artistListPage.Artists = await getAllArtistQuery
+                .OrderBy(a => a.Name)
+                .Skip(offset)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            return PartialView("ArtistList", artistListPage);
+        }
+
+        var searchQuery = ctx.Artists
+            .OrderBy(a => a.Name)
+            .Where(a => a.SearchVector!.Matches(EF.Functions.ToTsQuery($"{searchInput}:*")));
+
+        artistListPage.PageCount = pageCount;
+        artistListPage.PageSize = pageSize;
+        artistListPage.Artists = await searchQuery.Skip(offset).Take(pageSize).ToListAsync();
+        artistListPage.SearchInput = searchInput;
+
+        return PartialView("ArtistList", artistListPage);
     }
 
     [HttpPost]

@@ -1,8 +1,29 @@
-@model List<TicketingApp.Models.Artist>;
+@model TicketingApp.Models.ArtistListPage;
 
 <ul class="list-group">
-    @foreach (var artist in Model)
+    @foreach (var artist in Model.Artists)
     {
         <li class="list-group-item">@Html.DisplayFor(model => artist.Name)</li>
     }
 </ul>
+
+<hr />
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+
+        @for (var page = 0; page < Model.PageCount; ++page)
+        {
+            <li class="page-item">
+                <button class="page-link"
+                    hx-post="artist/pagination?searchInput=@(Model.SearchInput)&offset=@(page * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)"
+                    hx-target="#artist_search_result">
+                    @(page + 1)
+                </button>
+            </li>
+        }
+
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    </ul>
+</nav>
