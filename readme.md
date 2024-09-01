@@ -52,14 +52,13 @@ Seat:
 - [x] display list of artists with pagination
 
 - [ ] edit page for artists
-- [ ] refactor pagination (maybe create a class for this)
 
 - [ ] CRUD Venue and seats
 - [ ] create a seat map for the venue
 - [ ] mark seats on the venue based on their status (available, sold, pending)
 
 - [ ] scaffold the main page with search bar, event list page, and event details page
-
+- [ ] refactor pagination (maybe create a class for this)
 
 ## AWS TODO
 - [x] dockerize the application and setup github actions to push the docker image
