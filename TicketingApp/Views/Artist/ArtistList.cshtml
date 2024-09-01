@@ -3,7 +3,15 @@
 <ul class="list-group">
     @foreach (var artist in Model.Artists)
     {
-        <li class="list-group-item">@Html.DisplayFor(model => artist.Name)</li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">
+                    @Html.DisplayFor(model => artist.Name)
+                </div>
+                @Html.DisplayFor(model => artist.Description)
+            </div>
+            <a class="btn btn-success" href="/artist/edit/@(artist.Id)">Edit</a>
+        </li>
     }
 </ul>
 

@@ -50,8 +50,7 @@ Seat:
 - [x] postgres full text search for artist
 - [x] setup search input to execute search and display the results as a list using htmx
 - [x] display list of artists with pagination
-
-- [ ] edit page for artists
+- [x] edit page for artists
 
 - [ ] CRUD Venue and seats
 - [ ] create a seat map for the venue

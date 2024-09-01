@@ -16,12 +16,6 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
         return View(artistListPage);
     }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-
     [HttpPost]
     public async Task<IActionResult> Search(string searchInput, int pageSize = 5)
     {
@@ -78,6 +72,10 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
         return PartialView("ArtistList", artistListPage);
     }
 
+    public IActionResult Create()
+    {
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(Artist artist)
@@ -93,6 +91,31 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> Edit(int id)
+    {
+        var artist = await ctx.Artists.FirstOrDefaultAsync(a => a.Id == id);
+        if (artist == null)
+        {
+            return View("Error", new ErrorViewModel { Message = $"Artist with ID: {id} was not found" });
+        }
+
+        return View(artist);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(Artist artist)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(artist);
+        }
+
+        ctx.Artists.Update(artist);
+        var res = await ctx.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
     private async Task<ArtistListPage> ListAllArtists(int pageSize)
     {
         var artists = new List<Artist>();
@@ -101,7 +124,6 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
         var getAllArtistQuery = ctx.Artists;
 
         artistListPage.PageCount = getAllArtistQuery.Count() / pageSize;
-        Console.WriteLine(artistListPage.PageCount);
         artistListPage.Artists = await getAllArtistQuery
             .OrderBy(a => a.Name)
             .Take(pageSize)
