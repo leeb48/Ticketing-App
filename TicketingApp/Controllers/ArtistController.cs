@@ -7,8 +7,6 @@ namespace TicketingApp.Controllers;
 
 public class ArtistController(TicketingAppCtx ctx) : Controller
 {
-    private readonly TicketingAppCtx ctx = ctx;
-
     public async Task<IActionResult> Index()
     {
         var artistListPage = await ListAllArtists(5);

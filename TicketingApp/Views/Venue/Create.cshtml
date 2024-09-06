@@ -1,0 +1,88 @@
+@model TicketingApp.Models.VenueCreateDto;
+
+@{
+    ViewData["Title"] = "Create Venue";
+    int ENTER_KEY_CODE = 13;
+}
+
+<div id="errorMessage"></div>
+
+<h1>Create Venue</h1>
+
+<form hx-post="/venue/create" hx-target-error="#errorMessage"
+    onkeydown="if(event.keyCode === @(ENTER_KEY_CODE)) { event.preventDefault() }">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label for="venueName" class="form-label">Venue Name</label>
+        <input type="text" class="form-control" id="venueName" name="Name">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Venue Address</label>
+        <input type="text" class="form-control" id="address" name="Address" aria-describedby="address">
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" onkeydown="if(event.keyCode === @(ENTER_KEY_CODE)) { addRow() }" class="form-control"
+            id="rowNameInput" placeholder="Row Name" aria-label="Row Name" name="rowNameInput">
+        <span class="input-group-text">:</span>
+        <input type="number" onkeydown="if(event.keyCode === @(ENTER_KEY_CODE)) { addRow() }" min="1" step="1"
+            class="form-control" id="colCountInput" placeholder="Column Count" aria-label="Column Count"
+            name="colCountInput">
+        <button onclick="addRow()" type="button" class="btn btn-success">Add Row</button>
+    </div>
+
+    <table id="seatingTable" class="table">
+        <thead>
+            <tr>
+                <th scope="col">Row Name</th>
+                <th scope="col">Column Count</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        function addRow() {
+            const table = document.getElementById("seatingTable");
+            const row = table.insertRow();
+            const rowName = row.insertCell(0);
+            const colCount = row.insertCell(1);
+
+            rowName.setAttribute("name", "rowName");
+            colCount.setAttribute("name", "colCount");
+
+            const rowNameInput = document.getElementById("rowNameInput");
+            const colCountInput = document.getElementById("colCountInput");
+
+            rowName.innerHTML = rowNameInput.value;
+            colCount.innerHTML = colCountInput.value;
+
+            rowNameInput.value = '';
+            colCountInput.value = '';
+        }
+    </script>
+
+    <script>
+
+        document.body.addEventListener('htmx:configRequest', function (evt) {
+
+            var table = document.getElementById("seatingTable");
+
+            const seatingChart = {};
+
+            for (var i = 1, row; row = table.rows[i]; i++) {
+                const [rowVal, colVal] = row.cells;
+                seatingChart[rowVal.innerHTML] = +colVal.innerHTML
+            }
+
+            evt.detail.parameters['SeatingChart'] = seatingChart;
+        });
+    </script>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+
+</form>

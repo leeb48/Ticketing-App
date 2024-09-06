@@ -13,8 +13,12 @@ namespace TicketingApp.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "ticketing_app_schema");
+
             migrationBuilder.CreateTable(
                 name: "Artists",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -32,6 +36,7 @@ namespace TicketingApp.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -44,6 +49,7 @@ namespace TicketingApp.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Venues",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -58,6 +64,7 @@ namespace TicketingApp.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Bookings",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -72,6 +79,7 @@ namespace TicketingApp.Migrations
                     table.ForeignKey(
                         name: "FK_Bookings_Users_UserId",
                         column: x => x.UserId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -79,6 +87,7 @@ namespace TicketingApp.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Events",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -96,11 +105,13 @@ namespace TicketingApp.Migrations
                     table.ForeignKey(
                         name: "FK_Events_Artists_ArtistId",
                         column: x => x.ArtistId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Artists",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Events_Venues_VenueId",
                         column: x => x.VenueId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Venues",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -108,6 +119,7 @@ namespace TicketingApp.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Seats",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -123,12 +135,14 @@ namespace TicketingApp.Migrations
                     table.ForeignKey(
                         name: "FK_Seats_Venues_VenueId",
                         column: x => x.VenueId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Venues",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Tickets",
+                schema: "ticketing_app_schema",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -144,17 +158,20 @@ namespace TicketingApp.Migrations
                     table.ForeignKey(
                         name: "FK_Tickets_Bookings_BookingId",
                         column: x => x.BookingId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Bookings",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_Events_EventId",
                         column: x => x.EventId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Tickets_Seats_SeatId",
                         column: x => x.SeatId,
+                        principalSchema: "ticketing_app_schema",
                         principalTable: "Seats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -162,42 +179,50 @@ namespace TicketingApp.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Artists_SearchVector",
+                schema: "ticketing_app_schema",
                 table: "Artists",
                 column: "SearchVector")
                 .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_UserId",
+                schema: "ticketing_app_schema",
                 table: "Bookings",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_ArtistId",
+                schema: "ticketing_app_schema",
                 table: "Events",
                 column: "ArtistId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_VenueId",
+                schema: "ticketing_app_schema",
                 table: "Events",
                 column: "VenueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Seats_VenueId",
+                schema: "ticketing_app_schema",
                 table: "Seats",
                 column: "VenueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_BookingId",
+                schema: "ticketing_app_schema",
                 table: "Tickets",
                 column: "BookingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_EventId",
+                schema: "ticketing_app_schema",
                 table: "Tickets",
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_SeatId",
+                schema: "ticketing_app_schema",
                 table: "Tickets",
                 column: "SeatId");
         }
@@ -206,25 +231,32 @@ namespace TicketingApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "Tickets",
+                schema: "ticketing_app_schema");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "Bookings",
+                schema: "ticketing_app_schema");
 
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "Events",
+                schema: "ticketing_app_schema");
 
             migrationBuilder.DropTable(
-                name: "Seats");
+                name: "Seats",
+                schema: "ticketing_app_schema");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "ticketing_app_schema");
 
             migrationBuilder.DropTable(
-                name: "Artists");
+                name: "Artists",
+                schema: "ticketing_app_schema");
 
             migrationBuilder.DropTable(
-                name: "Venues");
+                name: "Venues",
+                schema: "ticketing_app_schema");
         }
     }
 }

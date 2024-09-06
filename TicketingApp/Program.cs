@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,7 @@ builder.WebHost.UseKestrel(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.AddNpgsqlDbContext<TicketingAppCtx>("postgres");
+builder.Services.AddDbContext<TicketingAppCtx>();
 
 var app = builder.Build();
 

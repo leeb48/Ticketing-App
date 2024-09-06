@@ -13,14 +13,15 @@ using TicketingApp.Data;
 namespace TicketingApp.Migrations
 {
     [DbContext(typeof(TicketingAppCtx))]
-    [Migration("20240826040427_init_core_entities")]
-    partial class init_core_entities
+    [Migration("20240904025139_removed_seat_section")]
+    partial class removed_seat_section
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("ticketing_app_schema")
                 .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -54,7 +55,7 @@ namespace TicketingApp.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
-                    b.ToTable("Artists");
+                    b.ToTable("Artists", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.Booking", b =>
@@ -79,7 +80,7 @@ namespace TicketingApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.Event", b =>
@@ -117,7 +118,7 @@ namespace TicketingApp.Migrations
 
                     b.HasIndex("VenueId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.Seat", b =>
@@ -136,10 +137,6 @@ namespace TicketingApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Section")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int?>("VenueId")
                         .HasColumnType("integer");
 
@@ -147,7 +144,7 @@ namespace TicketingApp.Migrations
 
                     b.HasIndex("VenueId");
 
-                    b.ToTable("Seats");
+                    b.ToTable("Seats", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.Ticket", b =>
@@ -179,7 +176,7 @@ namespace TicketingApp.Migrations
 
                     b.HasIndex("SeatId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.User", b =>
@@ -192,7 +189,7 @@ namespace TicketingApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.Venue", b =>
@@ -213,7 +210,7 @@ namespace TicketingApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Venues");
+                    b.ToTable("Venues", "ticketing_app_schema");
                 });
 
             modelBuilder.Entity("TicketingApp.Models.Booking", b =>

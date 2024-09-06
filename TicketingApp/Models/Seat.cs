@@ -7,10 +7,7 @@ public class Seat
     public int Id { get; set; }
 
     [Required]
-    public Venue venue = null!;
-
-    [Required]
-    public string Section { get; set; } = string.Empty;
+    public Venue Venue = null!;
 
     [Required]
     public string Row { get; set; } = string.Empty;

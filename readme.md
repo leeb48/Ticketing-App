@@ -52,6 +52,7 @@ Seat:
 - [x] display list of artists with pagination
 - [x] edit page for artists
 
+- [x] Fix DB Migration issue
 - [ ] CRUD Venue and seats
 - [ ] create a seat map for the venue
 - [ ] mark seats on the venue based on their status (available, sold, pending)
