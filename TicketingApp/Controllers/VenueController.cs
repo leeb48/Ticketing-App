@@ -55,22 +55,12 @@ public class VenueController(TicketingAppCtx ctx) : Controller
             Seats = []
         };
 
-        var seatingChart = JsonSerializer.Deserialize<Dictionary<string, int>>(venueCreateDto.SeatingChart);
+        // ctx.Venues.Add(newVenue);
+        // ctx.Seats.AddRange(newVenue.Seats);
 
-        foreach (var entry in seatingChart!)
-        {
-            for (var i = 0; i < entry.Value; ++i)
-            {
-                newVenue.Seats.Add(new Seat { Venue = newVenue, Row = entry.Key, Column = i.ToString() });
-            }
-        }
+        // await ctx.SaveChangesAsync();
 
-        ctx.Venues.Add(newVenue);
-        ctx.Seats.AddRange(newVenue.Seats);
-
-        await ctx.SaveChangesAsync();
-
-        HttpContext.Response.Headers.Append("HX-Redirect", "/venue");
+        // HttpContext.Response.Headers.Append("HX-Redirect", "/venue");
         return "";
     }
 

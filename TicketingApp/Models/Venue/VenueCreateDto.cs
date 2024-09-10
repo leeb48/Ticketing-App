@@ -11,5 +11,6 @@ public class VenueCreateDto
     [Required]
     public string Address { get; set; } = string.Empty;
 
-    public required string SeatingChart { get; set; }
+    public int RowCountInput { get; set; }
+    public int ColCountInput { get; set; }
 }

@@ -39,11 +39,16 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
     <script>
 
-        function generateSeatMap() {
-
+        function getRowCol() {
             const rowCount = +document.getElementById("rowCountInput").value;
             const colCount = +document.getElementById("colCountInput").value;
 
+            return [rowCount, colCount]
+        }
+
+        function generateSeatMap() {
+
+            const [rowCount, colCount] = getRowCol();
 
             const element = document.getElementById('seatChart');
             const options = {
@@ -69,13 +74,5 @@
         }
     </script>
 
-    <script>
-
-        document.body.addEventListener('htmx:configRequest', function (evt) {
-
-        });
-    </script>
-
     <button type="submit" class="btn btn-primary">Create</button>
-
 </form>
