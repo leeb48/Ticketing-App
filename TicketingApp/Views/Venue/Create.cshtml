@@ -25,44 +25,47 @@
     </div>
 
     <div class="input-group mb-3">
-        <input type="text" onkeydown="if(event.keyCode === @(ENTER_KEY_CODE)) { addRow() }" class="form-control"
-            id="rowNameInput" placeholder="Row Name" aria-label="Row Name" name="rowNameInput">
-        <span class="input-group-text">:</span>
-        <input type="number" onkeydown="if(event.keyCode === @(ENTER_KEY_CODE)) { addRow() }" min="1" step="1"
-            class="form-control" id="colCountInput" placeholder="Column Count" aria-label="Column Count"
-            name="colCountInput">
-        <button onclick="addRow()" type="button" class="btn btn-success">Add Row</button>
+        <span class="input-group-text">Row Count</span>
+        <input type="text" class="form-control" id="rowCountInput" placeholder="Row Count" aria-label="Row Count"
+            name="rowCountInput" value="7">
+        <span class="input-group-text">Column Count</span>
+        <input type="number" min="1" step="1" class="form-control" id="colCountInput" placeholder="Column Count"
+            aria-label="Column Count" name="colCountInput" value="7">
+        <button onclick="generateSeatMap()" type="button" class="btn btn-success">Generate</button>
     </div>
 
-    <table id="seatingTable" class="table">
-        <thead>
-            <tr>
-                <th scope="col">Row Name</th>
-                <th scope="col">Column Count</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div id="seatChart"></div>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
     <script>
-        function addRow() {
-            const table = document.getElementById("seatingTable");
-            const row = table.insertRow();
-            const rowName = row.insertCell(0);
-            const colCount = row.insertCell(1);
 
-            rowName.setAttribute("name", "rowName");
-            colCount.setAttribute("name", "colCount");
+        function generateSeatMap() {
 
-            const rowNameInput = document.getElementById("rowNameInput");
-            const colCountInput = document.getElementById("colCountInput");
+            const rowCount = +document.getElementById("rowCountInput").value;
+            const colCount = +document.getElementById("colCountInput").value;
 
-            rowName.innerHTML = rowNameInput.value;
-            colCount.innerHTML = colCountInput.value;
 
-            rowNameInput.value = '';
-            colCountInput.value = '';
+            const element = document.getElementById('seatChart');
+            const options = {
+                cart: { visible: false },
+                legendVisible: false,
+                map: {
+                    rows: rowCount,
+                    columns: colCount,
+                    seatTypes: {
+                        default: {
+                            label: 'Economy',
+                            cssClass: 'economy',
+                            price: 10,
+                        },
+                    },
+                },
+            };
+
+            const sc = new Seatchart(element, options);
+            sc.addEventListener("seatchange", (prop) => {
+                console.log(prop)
+            })
         }
     </script>
 
@@ -70,16 +73,6 @@
 
         document.body.addEventListener('htmx:configRequest', function (evt) {
 
-            var table = document.getElementById("seatingTable");
-
-            const seatingChart = {};
-
-            for (var i = 1, row; row = table.rows[i]; i++) {
-                const [rowVal, colVal] = row.cells;
-                seatingChart[rowVal.innerHTML] = +colVal.innerHTML
-            }
-
-            evt.detail.parameters['SeatingChart'] = seatingChart;
         });
     </script>
 

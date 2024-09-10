@@ -56,8 +56,9 @@ Seat:
 - [x] Use the pagination service with venue entity
 
 - [ ] CRUD Venue and seats
+- [ ] Find a way to create spacers and indicate empty seats on the venue create page.
 - [ ] When creating a venue, row & col count, row & col spacers, and empty seats can be
-used to render the venue and save it
+used to render the venue and save it.
 
 - [ ] create a seat map for the venue
 - [ ] mark seats on the venue based on their status (available, sold, pending)
