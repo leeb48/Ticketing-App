@@ -2,12 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TicketingApp.Models;
 
-public class Venue
+public class Venue : FullTextSearchEntity
 {
     public int Id { get; set; }
-
-    [Required]
-    public string Name { get; set; } = string.Empty;
 
     [Required]
     public string Address { get; set; } = string.Empty;

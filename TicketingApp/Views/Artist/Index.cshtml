@@ -1,4 +1,4 @@
-@model TicketingApp.Models.ArtistListPage;
+@model TicketingApp.Services.PaginationService.PaginationModel<Artist>;
 
 @{
     ViewData["Title"] = "Artist Page";
@@ -13,7 +13,7 @@
 <form hx-post="/artist/search" hx-target="#artist_search_result">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="searchInput" placeholder="Artist Name" aria-label="Artist Name"
-            aria-describedby="Artist Search Inpu">
+            aria-describedby="Artist Search Input">
         <button class="btn btn-outline-primary" type="submit" id="artist_search_btn">Search</button>
     </div>
 </form>

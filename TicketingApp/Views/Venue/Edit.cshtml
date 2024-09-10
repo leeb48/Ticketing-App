@@ -1,0 +1,32 @@
+@model TicketingApp.Models.Venue;
+
+@{
+    ViewData["Title"] = "Edit Venue";
+}
+
+<h1>Edit Venue</h1>
+
+<div id="seatChart"></div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
+<script>
+    var element = document.getElementById('seatChart');
+    var options = {
+        map: {
+            rows: 7,
+            columns: 7,
+            seatTypes: {
+                default: {
+                    label: 'Economy',
+                    cssClass: 'economy',
+                    price: 10,
+                },
+            },
+        },
+    };
+
+    var sc = new Seatchart(element, options);
+    sc.addEventListener("seatchange", (prop) => {
+        console.log(prop)
+    })
+</script>

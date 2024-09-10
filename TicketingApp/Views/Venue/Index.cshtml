@@ -5,3 +5,17 @@
 <h1>Venue Main Page</h1>
 
 <a class="btn btn-primary" href="/venue/create">Create Venue</a>
+
+<hr />
+
+<form hx-post="/venue/search" hx-target="#venue_search_result">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="searchInput" placeholder="Venue Name" aria-label="Venue Name"
+            aria-describedby="Venue Search Input">
+        <button class="btn btn-outline-primary" type="submit" id="venue_search_btn">Search</button>
+    </div>
+</form>
+
+<div id="venue_search_result">
+    @await Html.PartialAsync("~/Views/Venue/VenueList.cshtml")
+</div>

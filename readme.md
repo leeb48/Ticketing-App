@@ -53,7 +53,12 @@ Seat:
 - [x] edit page for artists
 
 - [x] Fix DB Migration issue
+- [x] Use the pagination service with venue entity
+
 - [ ] CRUD Venue and seats
+- [ ] When creating a venue, row & col count, row & col spacers, and empty seats can be
+used to render the venue and save it
+
 - [ ] create a seat map for the venue
 - [ ] mark seats on the venue based on their status (available, sold, pending)
 
