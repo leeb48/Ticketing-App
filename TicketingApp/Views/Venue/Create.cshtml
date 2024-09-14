@@ -36,43 +36,44 @@
 
     <div id="seatChart"></div>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
-    <script>
-
-        function getRowCol() {
-            const rowCount = +document.getElementById("rowCountInput").value;
-            const colCount = +document.getElementById("colCountInput").value;
-
-            return [rowCount, colCount]
-        }
-
-        function generateSeatMap() {
-
-            const [rowCount, colCount] = getRowCol();
-
-            const element = document.getElementById('seatChart');
-            const options = {
-                cart: { visible: false },
-                legendVisible: false,
-                map: {
-                    rows: rowCount,
-                    columns: colCount,
-                    seatTypes: {
-                        default: {
-                            label: 'Economy',
-                            cssClass: 'economy',
-                            price: 10,
-                        },
-                    },
-                },
-            };
-
-            const sc = new Seatchart(element, options);
-            sc.addEventListener("seatchange", (prop) => {
-                console.log(prop)
-            })
-        }
-    </script>
-
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
+<script>
+
+    function getRowCol() {
+        const rowCount = +document.getElementById("rowCountInput").value;
+        const colCount = +document.getElementById("colCountInput").value;
+
+        return [rowCount, colCount]
+    }
+
+    function generateSeatMap() {
+
+        const [rowCount, colCount] = getRowCol();
+
+        const element = document.getElementById('seatChart');
+        const options = {
+            cart: { visible: false },
+            legendVisible: false,
+            map: {
+                rows: rowCount,
+                columns: colCount,
+                seatTypes: {
+                    default: {
+                        label: 'Economy',
+                        cssClass: 'economy',
+                        price: 10,
+                    },
+                },
+            },
+        };
+
+        const sc = new Seatchart(element, options);
+        sc.addEventListener("seatchange", (prop) => {
+            console.log(prop)
+        })
+    }
+</script>

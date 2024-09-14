@@ -127,13 +127,11 @@ namespace TicketingApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Column")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Column")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Row")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Row")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("VenueId")
                         .HasColumnType("integer");
@@ -202,9 +200,15 @@ namespace TicketingApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ColumnCount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("RowCount")
+                        .HasColumnType("integer");
 
                     b.Property<NpgsqlTsVector>("SearchVector")
                         .IsRequired()

@@ -23,9 +23,9 @@ namespace TicketingApp.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
                         .Annotation("Npgsql:TsVectorConfig", "english")
                         .Annotation("Npgsql:TsVectorProperties", new[] { "Name" })
                 },
@@ -54,8 +54,11 @@ namespace TicketingApp.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Address = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "text", nullable: false)
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "english")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "Name" })
                 },
                 constraints: table =>
                 {
@@ -124,9 +127,8 @@ namespace TicketingApp.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Section = table.Column<string>(type: "text", nullable: false),
-                    Row = table.Column<string>(type: "text", nullable: false),
-                    Column = table.Column<string>(type: "text", nullable: false),
+                    Row = table.Column<int>(type: "integer", nullable: false),
+                    Column = table.Column<int>(type: "integer", nullable: false),
                     VenueId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -225,6 +227,13 @@ namespace TicketingApp.Migrations
                 schema: "ticketing_app_schema",
                 table: "Tickets",
                 column: "SeatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Venues_SearchVector",
+                schema: "ticketing_app_schema",
+                table: "Venues",
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
         }
 
         /// <inheritdoc />

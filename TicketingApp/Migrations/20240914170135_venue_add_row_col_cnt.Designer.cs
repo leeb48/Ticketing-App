@@ -13,8 +13,8 @@ using TicketingApp.Data;
 namespace TicketingApp.Migrations
 {
     [DbContext(typeof(TicketingAppCtx))]
-    [Migration("20240904024325_init_core_entities")]
-    partial class init_core_entities
+    [Migration("20240914170135_venue_add_row_col_cnt")]
+    partial class venue_add_row_col_cnt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,7 @@ namespace TicketingApp.Migrations
                         .HasColumnType("text");
 
                     b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("tsvector")
                         .HasAnnotation("Npgsql:TsVectorConfig", "english")
@@ -129,17 +130,11 @@ namespace TicketingApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Column")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Column")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Row")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Section")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Row")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("VenueId")
                         .HasColumnType("integer");
@@ -208,11 +203,28 @@ namespace TicketingApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ColumnCount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("RowCount")
+                        .HasColumnType("integer");
+
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "english")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Name" });
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SearchVector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.ToTable("Venues", "ticketing_app_schema");
                 });

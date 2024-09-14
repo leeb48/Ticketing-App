@@ -11,5 +11,11 @@ public class Venue : FullTextSearchEntity
 
     public List<Event> Event { get; set; } = null!;
 
+    [Required]
+    public required int RowCount { get; set; }
+
+    [Required]
+    public required int ColumnCount { get; set; }
+
     public List<Seat> Seats { get; set; } = null!;
 }

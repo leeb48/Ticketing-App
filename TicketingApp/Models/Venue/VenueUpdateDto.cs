@@ -2,12 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TicketingApp.Models;
 
-public class VenueCreateDto
+public class VenueUpdateDto
 {
+    public int Id { get; set; }
+
     public string Name { get; set; } = string.Empty;
 
     public string Address { get; set; } = string.Empty;
-
-    public int RowCountInput { get; set; }
-    public int ColCountInput { get; set; }
 }

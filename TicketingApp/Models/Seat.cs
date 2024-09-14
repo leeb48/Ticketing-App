@@ -10,8 +10,8 @@ public class Seat
     public Venue Venue = null!;
 
     [Required]
-    public string Row { get; set; } = string.Empty;
+    public int Row { get; set; }
 
     [Required]
-    public string Column { get; set; } = string.Empty;
+    public int Column { get; set; }
 }

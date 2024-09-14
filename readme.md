@@ -56,15 +56,15 @@ Seat:
 - [x] Use the pagination service with venue entity
 
 - [ ] CRUD Venue and seats
-- [ ] Find a way to create spacers and indicate empty seats on the venue create page.
-- [ ] When creating a venue, row & col count, row & col spacers, and empty seats can be
-used to render the venue and save it.
 
 - [ ] create a seat map for the venue
 - [ ] mark seats on the venue based on their status (available, sold, pending)
 
 - [ ] scaffold the main page with search bar, event list page, and event details page
 - [ ] refactor pagination (maybe create a class for this)
+
+## Backlog
+- [ ] Allow adding spacers and empty seats during create/update venue
 
 ## AWS TODO
 - [x] dockerize the application and setup github actions to push the docker image

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
@@ -52,15 +53,25 @@ public class VenueController(TicketingAppCtx ctx) : Controller
         {
             Name = venueCreateDto.Name,
             Address = venueCreateDto.Address,
+            RowCount = venueCreateDto.RowCountInput,
+            ColumnCount = venueCreateDto.ColCountInput,
             Seats = []
         };
 
-        // ctx.Venues.Add(newVenue);
-        // ctx.Seats.AddRange(newVenue.Seats);
+        for (var row = 0; row < venueCreateDto.RowCountInput; ++row)
+        {
+            for (var col = 0; col < venueCreateDto.ColCountInput; ++col)
+            {
+                newVenue.Seats.Add(new Seat { Venue = newVenue, Row = row, Column = col });
+            }
+        }
 
-        // await ctx.SaveChangesAsync();
+        ctx.Venues.Add(newVenue);
+        ctx.Seats.AddRange(newVenue.Seats);
 
-        // HttpContext.Response.Headers.Append("HX-Redirect", "/venue");
+        await ctx.SaveChangesAsync();
+
+        HttpContext.Response.Headers.Append("HX-Redirect", "/venue");
         return "";
     }
 
@@ -71,5 +82,37 @@ public class VenueController(TicketingAppCtx ctx) : Controller
             .FirstOrDefaultAsync(v => v.Id == id);
 
         return View(venue);
+    }
+
+    [HttpPost]
+    public async Task<string> Edit(VenueUpdateDto venueUpdateDto)
+    {
+        // TODO: make this into its own param validate service
+        var errMessages = new List<string>();
+
+        if (!ModelState.IsValid)
+        {
+            errMessages.AddRange(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
+        }
+
+        if (venueUpdateDto.Id == 0)
+        {
+            errMessages.Add($"Venue with ID {venueUpdateDto.Id} not found.");
+        }
+
+        if (errMessages.Count != 0)
+        {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            return SendAlert(AlertType.danger, string.Join(" | ", errMessages));
+        }
+
+        ctx.Venues
+            .Where(v => v.Id == venueUpdateDto.Id)
+            .ExecuteUpdate(prop => prop
+                .SetProperty(v => v.Name, venueUpdateDto.Name)
+                .SetProperty(v => v.Address, venueUpdateDto.Address));
+
+        HttpContext.Response.Headers.Append("HX-Redirect", "/venue");
+        return "";
     }
 }
