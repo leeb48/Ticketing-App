@@ -1,4 +1,4 @@
-@model TicketingApp.Services.PaginationService.PaginationModel<Artist>;
+@model TicketingApp.Services.PaginationService.PaginationModel<Venue>;
 
 <ul class="list-group">
     @foreach (var entity in Model.Entities)
@@ -8,9 +8,8 @@
                 <div class="fw-bold">
                     @Html.DisplayFor(model => entity.Name)
                 </div>
-                @Html.DisplayFor(model => entity.Description)
             </div>
-            <a class="btn btn-success" href="/artist/edit/@(entity.Id)">Edit</a>
+            <a class="btn btn-success" href="/venue/edit/@(entity.Id)">Edit</a>
         </li>
     }
 </ul>
@@ -23,8 +22,8 @@
         {
             <li class="page-item">
                 <button class="page-link"
-                    hx-post="artist/pagination?searchInput=@(Model.SearchInput)&offset=@((Model.CurrentPage - 1) * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)&currentPage=@(Model.CurrentPage - 1)"
-                    hx-target="#artist_search_result">
+                    hx-post="venue/pagination?searchInput=@(Model.SearchInput)&offset=@((Model.CurrentPage - 1) * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)&currentPage=@(Model.CurrentPage - 1)"
+                    hx-target="#venue_search_result">
                     Previous
                 </button>
             </li>
@@ -34,8 +33,8 @@
         {
             <li class="page-item">
                 <button class="page-link"
-                    hx-post="artist/pagination?searchInput=@(Model.SearchInput)&offset=@(page * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)&currentPage=@(page)"
-                    hx-target="#artist_search_result">
+                    hx-post="venue/pagination?searchInput=@(Model.SearchInput)&offset=@(page * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)&currentPage=@(page)"
+                    hx-target="#venue_search_result">
                     @(page + 1)
                 </button>
             </li>
@@ -45,8 +44,8 @@
         {
             <li class="page-item">
                 <button class="page-link"
-                    hx-post="artist/pagination?searchInput=@(Model.SearchInput)&offset=@((Model.CurrentPage + 1) * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)&currentPage=@(Model.CurrentPage + 1)"
-                    hx-target="#artist_search_result">
+                    hx-post="venue/pagination?searchInput=@(Model.SearchInput)&offset=@((Model.CurrentPage + 1) * Model.PageSize)&pageCount=@(Model.PageCount)&pageSize=@(Model.PageSize)&currentPage=@(Model.CurrentPage + 1)"
+                    hx-target="#venue_search_result">
                     Next
                 </button>
             </li>

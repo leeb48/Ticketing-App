@@ -1,19 +1,35 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
+using TicketingApp.Services.PaginationService;
+using static TicketingApp.Services.AlertViewService;
 
 namespace TicketingApp.Controllers;
 
 public class ArtistController(TicketingAppCtx ctx) : Controller
 {
-    private readonly TicketingAppCtx ctx = ctx;
-
+    private readonly PaginationService<Artist> paginationService = new(ctx);
     public async Task<IActionResult> Index()
     {
-        var artistListPage = await ListAllArtists(5);
+        return View(await paginationService.ListAllPage(5));
+    }
 
-        return View(artistListPage);
+    [HttpPost]
+    public async Task<IActionResult> Search(string searchInput, int pageSize = 5)
+    {
+        if (string.IsNullOrEmpty(searchInput))
+        {
+            return PartialView("ArtistList", await paginationService.ListAllPage(pageSize));
+        }
+
+        return PartialView("ArtistList", await paginationService.Search(searchInput, pageSize));
+    }
+
+    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage)
+    {
+        return PartialView("ArtistList", await paginationService.Pagination(searchInput, offset, pageCount, pageSize, currentPage));
     }
 
     public IActionResult Create()
@@ -21,93 +37,57 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
         return View();
     }
 
-
     [HttpPost]
-    public async Task<IActionResult> Search(string searchInput, int pageSize = 5)
+    public async Task<string> Create(ArtistCreateDto artist)
     {
-        if (string.IsNullOrEmpty(searchInput))
+        var errMessages = new List<string>();
+        if (!ModelState.IsValid)
         {
-            return PartialView("ArtistList", await ListAllArtists(pageSize));
+            errMessages.AddRange(ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage).ToList());
         }
 
-        var searchQuery = ctx.Artists
-            .OrderBy(a => a.Name)
-            .Where(a => a.SearchVector!.Matches(EF.Functions.ToTsQuery($"{searchInput}:*")));
-
-        var artistListPage = new ArtistListPage
+        if (errMessages.Count != 0)
         {
-            Artists = await searchQuery.Take(pageSize).ToListAsync(),
-            PageSize = pageSize,
-            PageCount = searchQuery.Count() / pageSize,
-            SearchInput = searchInput,
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            return SendAlert(AlertType.danger, string.Join(" | ", errMessages));
+        }
+
+        var newArtist = new Artist
+        {
+            Name = artist.Name,
+            Description = artist.Description,
         };
 
-        return PartialView("ArtistList", artistListPage);
+        ctx.Add(newArtist);
+        await ctx.SaveChangesAsync();
+
+        HttpContext.Response.Headers.Append("HX-Redirect", "/artist");
+
+        return "";
     }
 
-    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage)
+    public async Task<IActionResult> Edit(int id)
     {
-        var artists = new List<Artist>();
-        var artistListPage = new ArtistListPage { Artists = artists, CurrentPage = currentPage };
-
-        if (string.IsNullOrEmpty(searchInput))
+        var artist = await ctx.Artists.FirstOrDefaultAsync(a => a.Id == id);
+        if (artist == null)
         {
-            var getAllArtistQuery = ctx.Artists;
-
-            artistListPage.PageCount = pageCount;
-            artistListPage.PageSize = pageSize;
-            artistListPage.Artists = await getAllArtistQuery
-                .OrderBy(a => a.Name)
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync();
-
-
-            return PartialView("ArtistList", artistListPage);
+            return View("Error", new ErrorViewModel { Message = $"Artist with ID: {id} was not found" });
         }
 
-        var searchQuery = ctx.Artists
-            .OrderBy(a => a.Name)
-            .Where(a => a.SearchVector!.Matches(EF.Functions.ToTsQuery($"{searchInput}:*")));
-
-        artistListPage.PageCount = pageCount;
-        artistListPage.PageSize = pageSize;
-        artistListPage.Artists = await searchQuery.Skip(offset).Take(pageSize).ToListAsync();
-        artistListPage.SearchInput = searchInput;
-
-        return PartialView("ArtistList", artistListPage);
+        return View(artist);
     }
 
-
     [HttpPost]
-    public async Task<IActionResult> Create(Artist artist)
+    public async Task<IActionResult> Edit(Artist artist)
     {
         if (!ModelState.IsValid)
         {
             return View(artist);
         }
 
-        ctx.Add(artist);
-        await ctx.SaveChangesAsync();
+        ctx.Artists.Update(artist);
+        var res = await ctx.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
-    }
-
-    private async Task<ArtistListPage> ListAllArtists(int pageSize)
-    {
-        var artists = new List<Artist>();
-        var artistListPage = new ArtistListPage { Artists = artists, PageSize = pageSize };
-
-        var getAllArtistQuery = ctx.Artists;
-
-        artistListPage.PageCount = getAllArtistQuery.Count() / pageSize;
-        Console.WriteLine(artistListPage.PageCount);
-        artistListPage.Artists = await getAllArtistQuery
-            .OrderBy(a => a.Name)
-            .Take(pageSize)
-            .ToListAsync();
-
-
-        return artistListPage;
     }
 }

@@ -8,9 +8,17 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @* <link rel="stylesheet" href="~/TicketingApp.styles.css" asp-append-version="true" /> *@
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.css">
+    <style>
+        .economy {
+            color: white;
+            background-color: #43aa8b;
+        }
+    </style>
 </head>
 
-<body>
+<body hx-ext="response-targets">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -31,6 +39,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/artist">Artists</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/venue">Venue</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -50,6 +61,7 @@
     <script src="https://unpkg.com/htmx.org@2.0.2"
         integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ"
         crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
