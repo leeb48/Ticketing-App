@@ -1,8 +1,10 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
 using TicketingApp.Services.PaginationService;
+using static TicketingApp.Services.AlertViewService;
 
 namespace TicketingApp.Controllers;
 
@@ -36,17 +38,32 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Artist artist)
+    public async Task<string> Create(ArtistCreateDto artist)
     {
+        var errMessages = new List<string>();
         if (!ModelState.IsValid)
         {
-            return View(artist);
+            errMessages.AddRange(ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage).ToList());
         }
 
-        ctx.Add(artist);
+        if (errMessages.Count != 0)
+        {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            return SendAlert(AlertType.danger, string.Join(" | ", errMessages));
+        }
+
+        var newArtist = new Artist
+        {
+            Name = artist.Name,
+            Description = artist.Description,
+        };
+
+        ctx.Add(newArtist);
         await ctx.SaveChangesAsync();
 
-        return RedirectToAction(nameof(Index));
+        HttpContext.Response.Headers.Append("HX-Redirect", "/artist");
+
+        return "";
     }
 
     public async Task<IActionResult> Edit(int id)

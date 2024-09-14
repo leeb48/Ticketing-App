@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace TicketingApp.Models;
 
 public class VenueCreateDto
