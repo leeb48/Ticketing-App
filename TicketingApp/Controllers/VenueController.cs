@@ -1,7 +1,5 @@
 using System.Net;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
@@ -19,19 +17,19 @@ public class VenueController(TicketingAppCtx ctx) : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Search(string searchInput, int pageSize = 5)
+    public async Task<IActionResult> Search(string searchInput, int pageSize = 5, string template = "VenueList")
     {
         if (string.IsNullOrEmpty(searchInput))
         {
-            return PartialView("VenueList", await paginationService.ListAllPage(pageSize));
+            return PartialView(template, await paginationService.ListAllPage(pageSize));
         }
 
-        return PartialView("VenueList", await paginationService.Search(searchInput, pageSize));
+        return PartialView(template, await paginationService.Search(searchInput, pageSize));
     }
 
-    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage)
+    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage, string template = "VenueList")
     {
-        return PartialView("VenueList", await paginationService.Pagination(searchInput, offset, pageCount, pageSize, currentPage));
+        return PartialView(template, await paginationService.Pagination(searchInput, offset, pageCount, pageSize, currentPage));
     }
 
     public IActionResult Create()

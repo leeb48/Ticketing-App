@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);

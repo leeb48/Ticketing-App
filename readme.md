@@ -54,14 +54,19 @@ Seat:
 
 - [x] Fix DB Migration issue
 - [x] Use the pagination service with venue entity
+- [x] CRUD Venue and seats
+- [x] create a seat map for the venue
+- [x] scaffold the main page with search bar, event list page, and event details page
+- [x] refactor pagination (maybe create a class for this)
 
-- [ ] CRUD Venue and seats
-
-- [ ] create a seat map for the venue
+## Venue & Seat
 - [ ] mark seats on the venue based on their status (available, sold, pending)
 
-- [ ] scaffold the main page with search bar, event list page, and event details page
-- [ ] refactor pagination (maybe create a class for this)
+## Events
+- [ ] Create/update events and link artist and venue.
+ - [ ] When creating events, we can perform search to pick the artist and venue.
+- [ ] Display artist info on the events page.
+- [ ] Display the seat map on the events page.
 
 ## Backlog
 - [ ] Allow adding spacers and empty seats during create/update venue

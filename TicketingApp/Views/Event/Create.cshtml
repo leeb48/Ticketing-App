@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<div id="errorMessage"></div>
+
+<h1>Create Event</h1>
+
+<form hx-post="/event/create" hx-swap="none">
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="eventName">Event Name</span>
+        <input type="text" name="Name" class="form-control" aria-label="Event Name" aria-describedby="Event Name">
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">Description</span>
+        <textarea class="form-control" name="Description" aria-label="Description"></textarea>
+    </div>
+
+    <div class="input-group mb-3">
+        <label class="input-group-text">Event Date</label>
+        <input class="form-control" name="Date" placeholder="Pick a date" id="datePicker" />
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text" id="category">Category</span>
+        <input type="text" name="Category" class="form-control" aria-label="Category" aria-describedby="Category">
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Artist Search</span>
+            <input type="text" id="artist-search-input" class="form-control" aria-label="Event Name">
+            <button type="button" hx-post='/artist/search?template=ArtistListSelect' hx-target="#artistSelectList"
+                hx-swap="innerHTML" class="btn btn-success">Search</button>
+        </div>
+        <div id="artistSelectList"></div>
+    </div>
+
+    <div class="mb-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Venue Search</span>
+            <input type="text" id="venue-search-input" class="form-control" aria-label="Venue Name">
+            <button type="button" hx-post='/venue/search?template=VenueListSelect' hx-target="#venueSelectList"
+                hx-swap="innerHTML" class="btn btn-success">Search</button>
+        </div>
+        <div id="venueSelectList"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    const datePicker = document.getElementById("datePicker");
+    flatpickr(datePicker, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+    });
+
+    document.body.addEventListener('htmx:configRequest', function (evt) {
+
+        if (evt.detail.path === '/artist/search?template=ArtistListSelect') {
+            const searchInput = document.getElementById('artist-search-input').value
+            evt.detail.path += `&searchInput=${searchInput}`
+            return;
+        }
+
+        if (evt.detail.path === '/venue/search?template=VenueListSelect') {
+            const searchInput = document.getElementById('venue-search-input').value
+            evt.detail.path += `&searchInput=${searchInput}`
+            return;
+        }
+
+        if (evt.detail.path === '/event/create') {
+            const selectedArtist = document.getElementsByClassName("artist-select-ele active")[0]
+
+            const selectedVenue = document.getElementsByClassName("venue-select-ele active")[0]
+
+            if (!selectedArtist || !selectedVenue) {
+                console.log('must select both artist and venue');
+                document.getElementById('errorMessage').innerHTML = 
+                return;
+            }
+
+            console.log(selectedArtist.dataset.artistid);
+            console.log(selectedVenue.dataset.venueid);
+        }
+
+    });
+</script>

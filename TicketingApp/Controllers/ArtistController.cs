@@ -17,19 +17,19 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Search(string searchInput, int pageSize = 5)
+    public async Task<IActionResult> Search(string searchInput, int pageSize = 5, string template = "ArtistList")
     {
         if (string.IsNullOrEmpty(searchInput))
         {
-            return PartialView("ArtistList", await paginationService.ListAllPage(pageSize));
+            return PartialView(template, await paginationService.ListAllPage(pageSize));
         }
 
-        return PartialView("ArtistList", await paginationService.Search(searchInput, pageSize));
+        return PartialView(template, await paginationService.Search(searchInput, pageSize));
     }
 
-    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage)
+    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage, string template = "ArtistList")
     {
-        return PartialView("ArtistList", await paginationService.Pagination(searchInput, offset, pageCount, pageSize, currentPage));
+        return PartialView(template, await paginationService.Pagination(searchInput, offset, pageCount, pageSize, currentPage));
     }
 
     public IActionResult Create()
