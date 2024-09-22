@@ -38,7 +38,7 @@ public class VenueController(TicketingAppCtx ctx) : Controller
     }
 
     [HttpPost]
-    public async Task<string> Create(VenueCreateDto venue)
+    public async Task<string> Create(VenueCreateDto venueCreateDto)
     {
         // TODO: move this to a service
         if (!ModelState.IsValid)
@@ -49,16 +49,16 @@ public class VenueController(TicketingAppCtx ctx) : Controller
 
         var newVenue = new Venue
         {
-            Name = venue.Name,
-            Address = venue.Address,
-            RowCount = venue.RowCountInput,
-            ColumnCount = venue.ColCountInput,
+            Name = venueCreateDto.Name,
+            Address = venueCreateDto.Address,
+            RowCount = venueCreateDto.RowCountInput,
+            ColumnCount = venueCreateDto.ColCountInput,
             Seats = []
         };
 
-        for (var row = 0; row < venue.RowCountInput; ++row)
+        for (var row = 0; row < venueCreateDto.RowCountInput; ++row)
         {
-            for (var col = 0; col < venue.ColCountInput; ++col)
+            for (var col = 0; col < venueCreateDto.ColCountInput; ++col)
             {
                 newVenue.Seats.Add(new Seat { Venue = newVenue, Row = row, Column = col });
             }
@@ -83,7 +83,7 @@ public class VenueController(TicketingAppCtx ctx) : Controller
     }
 
     [HttpPost]
-    public async Task<string> Edit(VenueUpdateDto venue)
+    public async Task<string> Edit(VenueUpdateDto venueCreateDto)
     {
         // TODO: make this into its own param validate service
         var errMessages = new List<string>();
@@ -93,9 +93,9 @@ public class VenueController(TicketingAppCtx ctx) : Controller
             errMessages.AddRange(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
         }
 
-        if (venue.Id == 0)
+        if (venueCreateDto.Id == 0)
         {
-            errMessages.Add($"Venue with ID {venue.Id} not found.");
+            errMessages.Add($"Venue with ID {venueCreateDto.Id} not found.");
         }
 
         if (errMessages.Count != 0)
@@ -105,10 +105,10 @@ public class VenueController(TicketingAppCtx ctx) : Controller
         }
 
         await ctx.Venues
-                .Where(v => v.Id == venue.Id)
+                .Where(v => v.Id == venueCreateDto.Id)
                 .ExecuteUpdateAsync(prop => prop
-                    .SetProperty(v => v.Name, venue.Name)
-                    .SetProperty(v => v.Address, venue.Address));
+                    .SetProperty(v => v.Name, venueCreateDto.Name)
+                    .SetProperty(v => v.Address, venueCreateDto.Address));
 
         HttpContext.Response.Headers.Append("HX-Redirect", "/venue");
         return "";

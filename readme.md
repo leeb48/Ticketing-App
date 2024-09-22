@@ -64,6 +64,7 @@ Seat:
 
 ## Events
 - [ ] Create/update events and link artist and venue.
+ - [ ] 
  - [ ] When creating events, we can perform search to pick the artist and venue.
 - [ ] Display artist info on the events page.
 - [ ] Display the seat map on the events page.

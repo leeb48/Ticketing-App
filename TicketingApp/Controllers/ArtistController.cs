@@ -38,7 +38,7 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
     }
 
     [HttpPost]
-    public async Task<string> Create(ArtistCreateDto artist)
+    public async Task<string> Create(ArtistCreateDto artistCreateDto)
     {
         var errMessages = new List<string>();
         if (!ModelState.IsValid)
@@ -54,8 +54,8 @@ public class ArtistController(TicketingAppCtx ctx) : Controller
 
         var newArtist = new Artist
         {
-            Name = artist.Name,
-            Description = artist.Description,
+            Name = artistCreateDto.Name,
+            Description = artistCreateDto.Description,
         };
 
         ctx.Add(newArtist);

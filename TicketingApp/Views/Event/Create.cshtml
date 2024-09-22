@@ -6,7 +6,7 @@
 
 <h1>Create Event</h1>
 
-<form hx-post="/event/create" hx-swap="none">
+<form hx-post="/event/create" hx-target-error="#errorMessage">
     <div class="input-group mb-3">
         <span class="input-group-text" id="eventName">Event Name</span>
         <input type="text" name="Name" class="form-control" aria-label="Event Name" aria-describedby="Event Name">
@@ -19,7 +19,7 @@
 
     <div class="input-group mb-3">
         <label class="input-group-text">Event Date</label>
-        <input class="form-control" name="Date" placeholder="Pick a date" id="datePicker" />
+        <input required class="form-control" name="Date" placeholder="Pick a date" id="datePicker" />
     </div>
 
     <div class="input-group mb-3">
@@ -75,19 +75,17 @@
         }
 
         if (evt.detail.path === '/event/create') {
-            const selectedArtist = document.getElementsByClassName("artist-select-ele active")[0]
+            const artistId = document.getElementsByClassName("artist-select-ele active")[0]?.dataset.artistid || 0;
+            const venueId = document.getElementsByClassName("venue-select-ele active")[0]?.dataset.venueid || 0;
 
-            const selectedVenue = document.getElementsByClassName("venue-select-ele active")[0]
+            const dateStr = evt.detail.parameters["Date"]
 
-            if (!selectedArtist || !selectedVenue) {
-                console.log('must select both artist and venue');
-                document.getElementById('errorMessage').innerHTML = 
-                return;
+            evt.detail.parameters = {
+                ...evt.detail.parameters,
+                Date: dateStr && new Date(dateStr).toISOString(),
+                ArtistId: artistId,
+                VenueId: venueId,
             }
-
-            console.log(selectedArtist.dataset.artistid);
-            console.log(selectedVenue.dataset.venueid);
         }
-
     });
 </script>
