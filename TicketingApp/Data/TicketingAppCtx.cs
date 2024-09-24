@@ -38,6 +38,15 @@ public class TicketingAppCtx(IConfiguration config, DbContextOptions options) : 
             )
             .HasIndex(a => a.SearchVector)
             .HasMethod("GIN");
+
+        modelBuilder.Entity<Event>()
+            .HasGeneratedTsVectorColumn(a =>
+                a.SearchVector!,
+                "english",
+                a => new { a.Name }
+            )
+            .HasIndex(a => a.SearchVector)
+            .HasMethod("GIN");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

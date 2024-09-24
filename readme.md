@@ -59,13 +59,14 @@ Seat:
 - [x] scaffold the main page with search bar, event list page, and event details page
 - [x] refactor pagination (maybe create a class for this)
 
+
 ## Venue & Seat
 - [ ] mark seats on the venue based on their status (available, sold, pending)
 
 ## Events
 - [ ] Create/update events and link artist and venue.
- - [ ] 
- - [ ] When creating events, we can perform search to pick the artist and venue.
+ - [ ] During event update, display the previously selected artist and veneue.
+ - [x] When creating events, we can perform search to pick the artist and venue.
 - [ ] Display artist info on the events page.
 - [ ] Display the seat map on the events page.
 

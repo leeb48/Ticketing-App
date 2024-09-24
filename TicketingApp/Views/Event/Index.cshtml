@@ -5,3 +5,16 @@
 <h1>Event Page</h1>
 
 <a class="btn btn-primary" href="/event/create">Create Event</a>
+
+<hr />
+
+<form hx-post="/event/search" hx-target="#event_search_result">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="searchInput" placeholder="Event Name">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </div>
+</form>
+
+<div id="event_search_result">
+    @await Html.PartialAsync("~/Views/Event/EventList.cshtml")
+</div>

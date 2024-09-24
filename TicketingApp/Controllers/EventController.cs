@@ -1,18 +1,35 @@
 using System.Net;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
+using TicketingApp.Services.PaginationService;
 using static TicketingApp.Services.AlertViewService;
 
 namespace TicketingApp.Controllers;
 
 public class EventController(TicketingAppCtx ctx) : Controller
 {
-    public IActionResult Index()
+    private readonly PaginationService<Event> paginationService = new(ctx);
+    public async Task<IActionResult> Index()
     {
-        return View();
+        return View(await paginationService.ListAllPage(5));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Search(string searchInput, int pageSize = 5, string template = "EventList")
+    {
+        if (string.IsNullOrEmpty(searchInput))
+        {
+            return PartialView(template, await paginationService.ListAllPage(pageSize));
+        }
+
+        return PartialView(template, await paginationService.Search(searchInput, pageSize));
+    }
+
+    public async Task<IActionResult> Pagination(string searchInput, int offset, int pageCount, int pageSize, int currentPage, string template = "EventList")
+    {
+        return PartialView(template, await paginationService.Pagination(searchInput, offset, pageCount, pageSize, currentPage));
     }
 
     public IActionResult Create()
@@ -66,6 +83,23 @@ public class EventController(TicketingAppCtx ctx) : Controller
         ctx.Events.Add(newEvent);
         await ctx.SaveChangesAsync();
 
+        HttpContext.Response.Headers.Append("HX-Redirect", "/event");
+
         return "";
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var eventEntity = await ctx.Events
+            .Include(e => e.Artist)
+            .Include(e => e.Venue)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (eventEntity == null)
+        {
+            return View("Error", new ErrorViewModel { Message = $"Event with ID: {id} was not found" });
+        }
+
+        return View(eventEntity);
     }
 }

@@ -41,6 +41,7 @@
         "cpus": 4
     },
     "remoteEnv": {
+        "TZ": "America/Los_Angeles",
         "DOTNET_MULTILEVEL_LOOKUP": "0",
         "TARGET": "net8.0"
     },
