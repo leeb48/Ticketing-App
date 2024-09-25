@@ -46,11 +46,6 @@ public class EventController(TicketingAppCtx ctx) : Controller
             errMessages.AddRange(ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage).ToList());
         }
 
-        if (eventCreateDto.ArtistId == 0 || eventCreateDto.VenueId == 0)
-        {
-            errMessages.Add($"ArtistID: {eventCreateDto.ArtistId} or VenueID: {eventCreateDto.VenueId} is invalid");
-        }
-
         var artist = await ctx.Artists.FirstOrDefaultAsync(a => a.Id == eventCreateDto.ArtistId);
         var venue = await ctx.Venues.FirstOrDefaultAsync(v => v.Id == eventCreateDto.VenueId);
 
@@ -72,6 +67,7 @@ public class EventController(TicketingAppCtx ctx) : Controller
 
         var newEvent = new Event
         {
+            Id = eventCreateDto.Id ?? 0,
             Name = eventCreateDto.Name,
             Description = eventCreateDto.Description,
             Date = eventCreateDto.Date,
@@ -80,7 +76,7 @@ public class EventController(TicketingAppCtx ctx) : Controller
             Venue = venue!,
         };
 
-        ctx.Events.Add(newEvent);
+        ctx.Events.Update(newEvent);
         await ctx.SaveChangesAsync();
 
         HttpContext.Response.Headers.Append("HX-Redirect", "/event");

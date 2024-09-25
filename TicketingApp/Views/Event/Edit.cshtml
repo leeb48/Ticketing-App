@@ -8,6 +8,9 @@
 <h1>Create Event</h1>
 
 <form hx-post="/event/create" hx-target-error="#errorMessage">
+
+    <input type="hidden" type="number" name="Id" value="@Html.ValueFor(model => model.Id)">
+
     <div class="input-group mb-3">
         <span class="input-group-text" id="eventName">Event Name</span>
         <input type="text" name="Name" class="form-control" aria-label="Event Name" aria-describedby="Event Name"
@@ -39,9 +42,10 @@
     <div class="mb-3">
         <div class="input-group mb-3">
             <span class="input-group-text">Artist Search</span>
-            <input type="text" id="artist-search-input" class="form-control" aria-label="Event Name">
+            <input type="text" id="artist-search-input" class="form-control" aria-label="Event Name"
+                value="@Html.ValueFor(model => model.Artist.Name)">
             <button type="button" hx-post='/artist/search?template=ArtistListSelect' hx-target="#artistSelectList"
-                hx-trigger="load" hx-swap="innerHTML" class="btn btn-success">Search</button>
+                hx-trigger="load, click" hx-swap="innerHTML" class="btn btn-success">Search</button>
         </div>
         <div id="artistSelectList"></div>
     </div>
@@ -49,14 +53,15 @@
     <div class="mb-3">
         <div class="input-group mb-3">
             <span class="input-group-text">Venue Search</span>
-            <input type="text" id="venue-search-input" class="form-control" aria-label="Venue Name">
+            <input type="text" id="venue-search-input" class="form-control" aria-label="Venue Name"
+                value="@Html.ValueFor(model => model.Venue.Name)">
             <button type="button" hx-post='/venue/search?template=VenueListSelect' hx-target="#venueSelectList"
-                hx-swap="innerHTML" class="btn btn-success">Search</button>
+                hx-trigger="load, click" hx-swap="innerHTML" class="btn btn-success">Search</button>
         </div>
         <div id="venueSelectList"></div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>
 
 
@@ -67,6 +72,22 @@
     flatpickr(datePicker, {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
+    });
+
+    document.body.addEventListener('htmx:afterOnLoad', function (evt) {
+        const artistList = document.querySelectorAll(".artist-select-ele")
+        for (const artistEle of artistList) {
+            if (Number(artistEle.dataset.artistid) === @Model.Artist.Id) {
+                artistEle.classList.add("active")
+            }
+        }
+
+        const venueList = document.querySelectorAll(".venue-select-ele")
+        for (const venueEle of venueList) {
+            if (Number(venueEle.dataset.venueid) === @Model.Venue.Id) {
+                venueEle.classList.add("active")
+            }
+        }
     });
 
     document.body.addEventListener('htmx:configRequest', function (evt) {
