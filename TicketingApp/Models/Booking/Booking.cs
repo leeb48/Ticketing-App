@@ -13,8 +13,5 @@ public class Booking
     public List<Ticket> Tickets { get; set; } = null!;
 
     [Required]
-    public decimal TotalCost { get; set; }
-
-    [Required]
-    public string status { get; set; } = null!;
+    public string Status { get; set; } = null!;
 }

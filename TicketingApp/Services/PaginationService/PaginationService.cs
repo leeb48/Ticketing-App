@@ -11,7 +11,7 @@ public class PaginationService<TEntity>(TicketingAppCtx ctx) where TEntity : Ful
 
         var searchQuery = ctx.Set<TEntity>()
             .OrderBy(a => a.Name)
-            .Where(a => a.SearchVector!.Matches(EF.Functions.ToTsQuery($"{searchInput}:*")));
+            .Where(a => a.SearchVector!.Matches(EF.Functions.PlainToTsQuery($"{searchInput}:*")));
 
         var paginationModel = new PaginationModel<TEntity>
         {

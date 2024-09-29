@@ -47,7 +47,7 @@ public class EventController(TicketingAppCtx ctx) : Controller
         }
 
         var artist = await ctx.Artists.FirstOrDefaultAsync(a => a.Id == eventCreateDto.ArtistId);
-        var venue = await ctx.Venues.FirstOrDefaultAsync(v => v.Id == eventCreateDto.VenueId);
+        var venue = await ctx.Venues.Include(v => v.Seats).FirstOrDefaultAsync(v => v.Id == eventCreateDto.VenueId);
 
         if (artist == null)
         {
@@ -77,6 +77,19 @@ public class EventController(TicketingAppCtx ctx) : Controller
         };
 
         ctx.Events.Update(newEvent);
+
+        if (eventCreateDto.Id == null)
+        {
+            var tickets = new List<Ticket>();
+            foreach (var seat in venue!.Seats)
+            {
+                var ticket = new Ticket { Event = newEvent, Status = TicketStatus.Available, Seat = seat };
+                tickets.Add(ticket);
+            }
+
+            ctx.Tickets.AddRange(tickets);
+        }
+
         await ctx.SaveChangesAsync();
 
         HttpContext.Response.Headers.Append("HX-Redirect", "/event");
@@ -85,6 +98,21 @@ public class EventController(TicketingAppCtx ctx) : Controller
     }
 
     public async Task<IActionResult> Edit(int id)
+    {
+        var eventEntity = await ctx.Events
+            .Include(e => e.Artist)
+            .Include(e => e.Venue)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (eventEntity == null)
+        {
+            return View("Error", new ErrorViewModel { Message = $"Event with ID: {id} was not found" });
+        }
+
+        return View(eventEntity);
+    }
+
+    public async Task<IActionResult> Detail(int id)
     {
         var eventEntity = await ctx.Events
             .Include(e => e.Artist)

@@ -1,8 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model TicketingApp.Services.PaginationService.PaginationModel<Event>;
+@{
+    ViewData["Title"] = "Ticketing App";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Book Your Next Event</h1>
+
+<div class="container">
+    <form hx-post="/event/search" hx-target="#event_search_result">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="searchInput" placeholder="Event Name">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+<div id="event_search_result">
+    @await Html.PartialAsync("~/Views/Event/EventList.cshtml")
 </div>

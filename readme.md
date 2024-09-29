@@ -59,16 +59,36 @@ Seat:
 - [x] scaffold the main page with search bar, event list page, and event details page
 - [x] refactor pagination (maybe create a class for this)
 
+## Bug
+- [x] full text search with spaces are not working
 
-## Venue & Seat
+## Authentication
+- [ ] Create an auth controller to handle user session using JWT
+- [ ] do not show edit button when doing search on the main page
+ - [ ] check the authentication status in the event controller and pass in the data to the pagination model
+
+## Alerting
+- [ ] rework alerts so that it can be shown across different pages
+
+## Tickets
+- [ ] add prices to tickets
+- [ ] display the correct price amounts on the checkout and reserve pages
+
+## Seat reservation
+- [x] main event search bar that lists the events
+- [x] send the selected seats to booking controller and retrieve the correct tickets
+- [ ] create the booking and display it on the checkout page
 - [ ] mark seats on the venue based on their status (available, sold, pending)
+ - [ ] use distributed lock to mark the seats during checkout step
+- [ ] create checkout step using stripe
 
 ## Events
-- [ ] Create/update events and link artist and venue.
- - [ ] During event update, display the previously selected artist and veneue.
+- [x] create the tickets when events are created
+- [x] Create/update events and link artist and venue.
+ - [x] During event update, display the previously selected artist and veneue.
  - [x] When creating events, we can perform search to pick the artist and venue.
-- [ ] Display artist info on the events page.
-- [ ] Display the seat map on the events page.
+- [x] Display artist info on the events page.
+- [x] Display the seat map on the events page.
 
 ## Backlog
 - [ ] Allow adding spacers and empty seats during create/update venue

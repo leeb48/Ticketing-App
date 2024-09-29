@@ -10,7 +10,8 @@
                 </div>
                 @Html.DisplayFor(model => entity.Description)
             </div>
-            <a class="btn btn-success" href="/event/edit/@(entity.Id)">Edit</a>
+            <a class="btn btn-info ms-2" href="/event/detail/@(entity.Id)">View</a>
+            <a class="btn btn-success ms-2" href="/event/edit/@(entity.Id)">Edit</a>
         </li>
     }
 </ul>

@@ -3,8 +3,6 @@
     ViewData["Title"] = "Create Event";
 }
 
-<div id="errorMessage"></div>
-
 <h1>Create Event</h1>
 
 <form hx-post="/event/create" hx-target-error="#errorMessage">
@@ -24,7 +22,6 @@
     </div>
 
     @{
-
         var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(Model.Date, TimeZoneInfo.Local).ToString("yyyy-MM-dd HH:mm:ss");
         <div class="input-group mb-3">
             <label class="input-group-text">Event Date</label>

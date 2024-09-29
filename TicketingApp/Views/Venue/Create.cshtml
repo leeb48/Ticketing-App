@@ -5,8 +5,6 @@
     int ENTER_KEY_CODE = 13;
 }
 
-<div id="errorMessage"></div>
-
 <h1>Create Venue</h1>
 
 <form hx-post="/venue/create" hx-target-error="#errorMessage"
@@ -34,7 +32,9 @@
         <button onclick="generateSeatMap()" type="button" class="btn btn-success">Generate</button>
     </div>
 
-    <div id="seatChart"></div>
+    <div class="container d-flex align-items-center justify-content-center">
+        <div id="seatChart"></div>
+    </div>
 
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
