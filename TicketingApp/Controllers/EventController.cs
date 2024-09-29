@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
 using TicketingApp.Services.PaginationService;
+using TicketingApp.Services.TicketLockService;
 using static TicketingApp.Services.AlertViewService;
 
 namespace TicketingApp.Controllers;
 
-public class EventController(TicketingAppCtx ctx) : Controller
+public class EventController(TicketingAppCtx ctx, ILockService<Ticket> lockService) : Controller
 {
     private readonly PaginationService<Event> paginationService = new(ctx);
     public async Task<IActionResult> Index()
@@ -117,6 +118,8 @@ public class EventController(TicketingAppCtx ctx) : Controller
         var eventEntity = await ctx.Events
             .Include(e => e.Artist)
             .Include(e => e.Venue)
+            .Include(e => e.Tickets)
+                .ThenInclude(t => t.Seat)
             .FirstOrDefaultAsync(e => e.Id == id);
 
         if (eventEntity == null)
@@ -124,6 +127,12 @@ public class EventController(TicketingAppCtx ctx) : Controller
             return View("Error", new ErrorViewModel { Message = $"Event with ID: {id} was not found" });
         }
 
-        return View(eventEntity);
+        var eventDetailView = new EventDetailView
+        {
+            Event = eventEntity,
+            LockedTickets = await lockService.GetLockedEntities(eventEntity!.Tickets),
+        };
+
+        return View(eventDetailView);
     }
 }

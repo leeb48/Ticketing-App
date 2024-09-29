@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
 using TicketingApp.Models;
+using TicketingApp.Services.TicketLockService;
 using static TicketingApp.Services.AlertViewService;
 
 
 namespace TicketingApp.Controllers;
 
-public class BookingController(TicketingAppCtx ctx) : Controller
+public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockService) : Controller
 {
     public async Task<IActionResult> Checkout(int id)
     {
@@ -22,6 +23,8 @@ public class BookingController(TicketingAppCtx ctx) : Controller
             .Include(b => b.Tickets)
                 .ThenInclude(t => t.Seat)
             .FirstOrDefaultAsync(b => b.Id == id);
+
+        lockService.CreateLock(booking!.Tickets, 60);
 
         return View(booking);
     }

@@ -1,4 +1,6 @@
 using TicketingApp.Data;
+using TicketingApp.Models;
+using TicketingApp.Services.TicketLockService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.WebHost.UseKestrel(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<TicketingAppCtx>();
+builder.Services.AddScoped<ILockService<Ticket>, TicketLockService>();
 
 var app = builder.Build();
 

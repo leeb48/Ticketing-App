@@ -67,6 +67,9 @@ Seat:
 - [ ] do not show edit button when doing search on the main page
  - [ ] check the authentication status in the event controller and pass in the data to the pagination model
 
+## Booking
+- [ ] create a user session so that multiple booking objects are not created when checkout is clicked multiple times
+
 ## Alerting
 - [ ] rework alerts so that it can be shown across different pages
 
@@ -77,7 +80,9 @@ Seat:
 ## Seat reservation
 - [x] main event search bar that lists the events
 - [x] send the selected seats to booking controller and retrieve the correct tickets
-- [ ] create the booking and display it on the checkout page
+- [x] create the booking and display it on the checkout page
+
+Start here
 - [ ] mark seats on the venue based on their status (available, sold, pending)
  - [ ] use distributed lock to mark the seats during checkout step
 - [ ] create checkout step using stripe

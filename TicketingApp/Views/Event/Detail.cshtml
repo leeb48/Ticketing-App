@@ -1,22 +1,23 @@
-@model TicketingApp.Models.Event;
+@model TicketingApp.Models.EventDetailView;
 @{
     ViewData["Title"] = "Event Detail";
+    Event @event = Model.Event;
 }
 
 <div class="input-group mb-3">
     <span class="input-group-text" id="eventName">Event Name</span>
     <input type="text" name="Name" class="form-control" aria-label="Event Name" aria-describedby="Event Name"
-        value="@Html.ValueFor(model => model.Name)" disabled>
+        value="@Html.ValueFor(model => @event.Name)" disabled>
 </div>
 
 <div class="input-group mb-3">
     <span class="input-group-text">Description</span>
     <textarea class="form-control" name="Description" aria-label="Description"
-        disabled>@Html.DisplayFor(model => model.Description)</textarea>
+        disabled>@Html.DisplayFor(model => @event.Description)</textarea>
 </div>
 
 @{
-    var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(Model.Date, TimeZoneInfo.Local).ToString("yyyy-MM-dd HH:mm:ss");
+    var localDateTime = TimeZoneInfo.ConvertTimeFromUtc(@event.Date, TimeZoneInfo.Local).ToString("yyyy-MM-dd HH:mm:ss");
     <div class="input-group mb-3">
         <label class="input-group-text">Event Date</label>
         <input required class="form-control" name="Date" placeholder="Pick a date" id="datePicker" value="@localDateTime"
@@ -27,7 +28,7 @@
 <div class="input-group mb-3">
     <span class="input-group-text" id="category">Category</span>
     <input type="text" name="Category" class="form-control" aria-label="Category" aria-describedby="Category"
-        value="@Html.ValueFor(model => model.Category)" disabled>
+        value="@Html.ValueFor(model => @event.Category)" disabled>
 </div>
 
 <div class="d-flex justify-content-around">
@@ -35,16 +36,16 @@
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">Artist</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">@Html.DisplayFor(model => model.Artist.Name)</h6>
-            <p class="card-text">@Html.DisplayFor(model => model.Artist.Description)</p>
+            <h6 class="card-subtitle mb-2 text-body-secondary">@Html.DisplayFor(model => @event.Artist.Name)</h6>
+            <p class="card-text">@Html.DisplayFor(model => @event.Artist.Description)</p>
         </div>
     </div>
 
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">Venue</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">@Html.DisplayFor(model => model.Venue.Name)</h6>
-            <p class="card-text">@Html.DisplayFor(model => model.Venue.Address)</p>
+            <h6 class="card-subtitle mb-2 text-body-secondary">@Html.DisplayFor(model => @event.Venue.Name)</h6>
+            <p class="card-text">@Html.DisplayFor(model => @event.Venue.Address)</p>
 
         </div>
     </div>
@@ -56,13 +57,12 @@
     <div id="seatChart"></div>
 </div>
 
-
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
 <script>
 
     function getRowCol() {
-        const rowCount = @Model.Venue.RowCount;
-        const colCount = @Model.Venue.ColumnCount;
+        const rowCount = @Model.Event.Venue.RowCount;
+        const colCount = @Model.Event.Venue.ColumnCount;
 
         return [rowCount, colCount]
     }
@@ -100,7 +100,7 @@
             }))
 
             const checkoutReq = {
-                EventId: @Model.Id,
+                EventId: @Model.Event.Id,
                 Cart,
             }
 

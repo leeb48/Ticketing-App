@@ -19,4 +19,7 @@ public class Event : FullTextSearchEntity
 
     [Required]
     public Venue Venue { get; set; } = null!;
+
+    [Required]
+    public List<Ticket> Tickets { get; set; } = null!;
 }
