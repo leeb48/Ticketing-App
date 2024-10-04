@@ -32,11 +32,18 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
     [HttpPost]
     public async Task<string> Purchase(int id)
     {
-        var booking = await ctx.Bookings.FirstOrDefaultAsync(b => b.Id == id);
+        var booking = await ctx.Bookings
+            .Include(b => b.Tickets)
+            .FirstOrDefaultAsync(b => b.Id == id);
 
         if (booking == null)
         {
             return SendAlert(AlertType.danger, "Booking was not found");
+        }
+
+        foreach (var ticket in booking.Tickets)
+        {
+            ticket.Status = TicketStatus.Reserved;
         }
 
         booking.Status = BookingStatus.Booked;

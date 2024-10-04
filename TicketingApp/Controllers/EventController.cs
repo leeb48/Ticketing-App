@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Security;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;
@@ -127,10 +129,22 @@ public class EventController(TicketingAppCtx ctx, ILockService<Ticket> lockServi
             return View("Error", new ErrorViewModel { Message = $"Event with ID: {id} was not found" });
         }
 
+        var lockedTickets = await lockService.GetLockedEntities(eventEntity!.Tickets);
+
+        var reservedSeats = eventEntity.Tickets
+            .Where(t => t.Status == TicketStatus.Reserved)
+            .Select(t => t.Seat)
+            .ToList();
+
+        foreach (var ticket in lockedTickets)
+        {
+            reservedSeats.Add(ticket.Seat);
+        }
+
         var eventDetailView = new EventDetailView
         {
             Event = eventEntity,
-            LockedTickets = await lockService.GetLockedEntities(eventEntity!.Tickets),
+            ReservedSeats = reservedSeats,
         };
 
         return View(eventDetailView);

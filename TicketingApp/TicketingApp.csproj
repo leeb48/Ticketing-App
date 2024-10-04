@@ -13,6 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="NRedisStack" Version="0.13.0" />
+    <PackageReference Include="Stripe.net" Version="46.1.0" />
   </ItemGroup>
 
 </Project>

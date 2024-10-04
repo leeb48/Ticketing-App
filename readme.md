@@ -46,6 +46,9 @@ Seat:
 - row
 - col
 
+## Start here
+- [ ] create checkout step using stripe
+
 ## Application TODO
 - [x] postgres full text search for artist
 - [x] setup search input to execute search and display the results as a list using htmx
@@ -81,11 +84,8 @@ Seat:
 - [x] main event search bar that lists the events
 - [x] send the selected seats to booking controller and retrieve the correct tickets
 - [x] create the booking and display it on the checkout page
-
-Start here
-- [ ] mark seats on the venue based on their status (available, sold, pending)
- - [ ] use distributed lock to mark the seats during checkout step
-- [ ] create checkout step using stripe
+- [x] mark seats on the venue based on their status (available, sold, pending)
+ - [x] use distributed lock to mark the seats during checkout step
 
 ## Events
 - [x] create the tickets when events are created
@@ -99,6 +99,5 @@ Start here
 - [ ] Allow adding spacers and empty seats during create/update venue
 
 ## AWS TODO
+- [ ] learn Pulumi to deploy the application on AWS
 - [x] dockerize the application and setup github actions to push the docker image
-- [ ] setup ECS to host the application
-- [ ] setup docker actions to deploy the docker image onto ECS cluster

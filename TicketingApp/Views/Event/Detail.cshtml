@@ -71,6 +71,8 @@
 
         const [rowCount, colCount] = getRowCol();
 
+        const reservedSeats = @Html.Raw(Json.Serialize(Model.ReservedSeats));
+
         const element = document.getElementById('seatChart');
         const options = {
             cart: {
@@ -86,6 +88,7 @@
                         price: 10,
                     },
                 },
+                reservedSeats: reservedSeats.map(seat => ({ row: seat.row, col: seat.column }))
             },
         };
 
