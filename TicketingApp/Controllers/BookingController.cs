@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using TicketingApp.Data;
 using TicketingApp.Models;
 using TicketingApp.Services.TicketLockService;
@@ -9,7 +10,7 @@ using static TicketingApp.Services.AlertViewService;
 
 namespace TicketingApp.Controllers;
 
-public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockService) : Controller
+public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockService, IConfiguration config) : Controller
 {
     public async Task<IActionResult> Checkout(int id)
     {
@@ -26,7 +27,25 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
 
         lockService.CreateLock(booking!.Tickets, 60);
 
-        return View(booking);
+        var options = new PaymentIntentCreateOptions
+        {
+            Amount = 100,
+            Currency = "usd",
+            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+            {
+                Enabled = true,
+            },
+        };
+
+        var service = new PaymentIntentService();
+        var intent = await service.CreateAsync(options);
+
+        return View(new BookingViewModel
+        {
+            Booking = booking,
+            StripeClientSecret = intent.ClientSecret,
+            StripePublicKey = config.GetValue<string>("Stripe:PublicKey")!,
+        });
     }
 
     [HttpPost]

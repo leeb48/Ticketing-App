@@ -26,8 +26,6 @@ public class TicketLockService : ILockService<Ticket>
 
             await redis.StringSetAsync(ticketId, ticketId);
             await redis.StringGetSetExpiryAsync(ticketId, TimeSpan.FromSeconds(TTL));
-
-            Console.WriteLine($"Locks created: {ticket.Id}");
         }
     }
 

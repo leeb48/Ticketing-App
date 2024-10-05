@@ -48,6 +48,8 @@ Seat:
 
 ## Start here
 - [ ] create checkout step using stripe
+ - [ ] after/during checkout, booking will be in processing. After transaction is processed, then update the status to booked
+- [ ] prevent going back to checkout page after purchasing
 
 ## Application TODO
 - [x] postgres full text search for artist
@@ -100,4 +102,5 @@ Seat:
 
 ## AWS TODO
 - [ ] learn Pulumi to deploy the application on AWS
+- [ ] host using multiple containers in distributed mode
 - [x] dockerize the application and setup github actions to push the docker image
