@@ -1,6 +1,4 @@
 using System.Net;
-using System.Net.Security;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketingApp.Data;

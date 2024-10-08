@@ -49,6 +49,7 @@ Seat:
 ## Start here
 - [ ] create checkout step using stripe
  - [ ] after/during checkout, booking will be in processing. After transaction is processed, then update the status to booked
+ - [ ] redirect the user to a order confirmation page
 - [ ] prevent going back to checkout page after purchasing
 
 ## Application TODO

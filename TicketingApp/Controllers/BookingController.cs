@@ -12,6 +12,30 @@ namespace TicketingApp.Controllers;
 
 public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockService, IConfiguration config) : Controller
 {
+    [HttpPost]
+    public async Task<IActionResult> UpdateWH()
+    {
+        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+        try
+        {
+            var stripeEvent = EventUtility.ParseEvent(json);
+
+            Console.WriteLine(stripeEvent.Type);
+
+            if (stripeEvent.Type == "charge.succeeded")
+            {
+                Console.WriteLine(stripeEvent.Data.Object);
+            }
+        }
+        catch (StripeException e)
+        {
+            Console.WriteLine(e.Message);
+            return BadRequest();
+        }
+
+        return Ok();
+    }
     public async Task<IActionResult> Checkout(int id)
     {
         var booking = await ctx.Bookings
@@ -35,6 +59,7 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
             {
                 Enabled = true,
             },
+            Metadata = new Dictionary<string, string> { { "bookingId", id.ToString() } }
         };
 
         var service = new PaymentIntentService();
