@@ -17,18 +17,20 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
+        // TODO: start here next time, update the booking status
         try
         {
             var stripeEvent = EventUtility.ParseEvent(json);
 
-            Console.WriteLine(stripeEvent.Type);
-
             if (stripeEvent.Type == "charge.succeeded")
             {
-                Console.WriteLine(stripeEvent.Data.Object);
+                var paymentIntent = stripeEvent.Data.Object as Charge;
+                var bookingId = (paymentIntent?.Metadata["bookingId"]) ?? throw new Exception("Missing booking ID from Stripe");
+
+                await CompleteBooking(int.Parse(bookingId));
             }
         }
-        catch (StripeException e)
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
             return BadRequest();
@@ -49,7 +51,7 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
                 .ThenInclude(t => t.Seat)
             .FirstOrDefaultAsync(b => b.Id == id);
 
-        lockService.CreateLock(booking!.Tickets, 60);
+        lockService.CreateLock(booking!.Tickets, 1);
 
         var options = new PaymentIntentCreateOptions
         {
@@ -71,31 +73,6 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
             StripeClientSecret = intent.ClientSecret,
             StripePublicKey = config.GetValue<string>("Stripe:PublicKey")!,
         });
-    }
-
-    [HttpPost]
-    public async Task<string> Purchase(int id)
-    {
-        var booking = await ctx.Bookings
-            .Include(b => b.Tickets)
-            .FirstOrDefaultAsync(b => b.Id == id);
-
-        if (booking == null)
-        {
-            return SendAlert(AlertType.danger, "Booking was not found");
-        }
-
-        foreach (var ticket in booking.Tickets)
-        {
-            ticket.Status = TicketStatus.Reserved;
-        }
-
-        booking.Status = BookingStatus.Booked;
-        await ctx.SaveChangesAsync();
-
-        HttpContext.Response.Headers.Append("HX-Redirect", "/");
-
-        return SendAlert(AlertType.success, "Successfully Booked");
     }
 
     public IActionResult Confirm(int id)
@@ -149,5 +126,21 @@ public class BookingController(TicketingAppCtx ctx, ILockService<Ticket> lockSer
         }
 
         return "";
+    }
+
+    private async Task CompleteBooking(int bookingId)
+    {
+        var booking = await ctx.Bookings
+            .Include(b => b.Tickets)
+            .FirstOrDefaultAsync(b => b.Id == bookingId)
+            ?? throw new Exception("Booking was not found");
+
+        foreach (var ticket in booking.Tickets)
+        {
+            ticket.Status = TicketStatus.Reserved;
+        }
+
+        booking.Status = BookingStatus.Booked;
+        await ctx.SaveChangesAsync();
     }
 }

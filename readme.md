@@ -46,11 +46,12 @@ Seat:
 - row
 - col
 
-## Start here
-- [ ] create checkout step using stripe
- - [ ] after/during checkout, booking will be in processing. After transaction is processed, then update the status to booked
- - [ ] redirect the user to a order confirmation page
-- [ ] prevent going back to checkout page after purchasing
+# Start here
+
+## AWS TODO
+- [ ] learn Pulumi to deploy the application on AWS
+- [ ] host using multiple containers in distributed mode
+- [x] dockerize the application and setup github actions to push the docker image
 
 ## Application TODO
 - [x] postgres full text search for artist
@@ -64,9 +65,16 @@ Seat:
 - [x] create a seat map for the venue
 - [x] scaffold the main page with search bar, event list page, and event details page
 - [x] refactor pagination (maybe create a class for this)
+- [ ] refactor controller to be lean and create services to handel business logic
 
 ## Bug
 - [x] full text search with spaces are not working
+
+## Checkout
+- [ ] create checkout step using stripe
+ - [x] after/during checkout, booking will be in processing. After transaction is processed, then update the status to booked
+ - [ ] redirect the user to a order confirmation page (show order status, ticket info, event info)
+- [ ] prevent going back to checkout page after purchasing
 
 ## Authentication
 - [ ] Create an auth controller to handle user session using JWT
@@ -82,6 +90,7 @@ Seat:
 ## Tickets
 - [ ] add prices to tickets
 - [ ] display the correct price amounts on the checkout and reserve pages
+- [ ] free up tickets after the event (single and batch)
 
 ## Seat reservation
 - [x] main event search bar that lists the events
@@ -100,8 +109,3 @@ Seat:
 
 ## Backlog
 - [ ] Allow adding spacers and empty seats during create/update venue
-
-## AWS TODO
-- [ ] learn Pulumi to deploy the application on AWS
-- [ ] host using multiple containers in distributed mode
-- [x] dockerize the application and setup github actions to push the docker image

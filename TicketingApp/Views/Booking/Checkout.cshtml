@@ -73,7 +73,6 @@
     const addressElement = elements.create('address', { mode: 'billing' });
     addressElement.mount('#address-element');
 
-    //
 
     // Process payment
     const form = document.getElementById("payment-form");
@@ -83,7 +82,7 @@
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: "https://127.0.0.1:5112"
+                return_url: "https://127.0.0.1:5112/booking/confirm"
             }
         })
 
