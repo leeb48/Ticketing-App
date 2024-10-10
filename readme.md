@@ -50,6 +50,9 @@ Seat:
 
 ## AWS TODO
 - [ ] learn Pulumi to deploy the application on AWS
+ - [ ] allocate redis
+ - [ ] allocate postgrest rds
+ - [ ] update security groups to allow codespaces to access redis & rds
 - [ ] host using multiple containers in distributed mode
 - [x] dockerize the application and setup github actions to push the docker image
 
@@ -109,3 +112,7 @@ Seat:
 
 ## Backlog
 - [ ] Allow adding spacers and empty seats during create/update venue
+
+
+### Commands
+stripe listen --forward-to https://localhost:5112/booking/updatewh --skip-verify 
